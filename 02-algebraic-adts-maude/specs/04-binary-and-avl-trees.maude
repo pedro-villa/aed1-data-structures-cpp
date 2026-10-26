@@ -1,0 +1,154 @@
+*** ============================================================================
+*** Module 04: Binary Trees, BST Invariants & AVL Rotations (Exercises 140 - 144)
+*** ============================================================================
+
+*** ----------------------------------------------------------------------------
+*** EJERCICIO 140.maude — Binary Tree Constructors, Height & Node Count (AB)
+*** ----------------------------------------------------------------------------
+***************** SINTAXIS *****************
+op arbolVacio : -> AB .
+op esVacio : AB -> Bool .
+op construir : V AB AB -> AB .
+op construirRaiz : V -> AB .
+op altura : AB -> N .
+op numNodos : AB -> N .
+***************** SEMANTICA ****************
+var a b : AB .
+var v w : V .
+eq esVacio(arbolVacio) = true .
+eq esVacio(construir(v, a, b)) = false .
+eq construirRaiz(v) = construir(v, arbolVacio, arbolVacio) .
+eq altura(arbolVacio) = cero .
+eq altura(construir(v, a, b)) = sucesor(maximo(altura(a), altura(b))) .
+eq numNodos(arbolVacio) = cero .
+eq numNodos(construir(v, a, b)) = sucesor(suma(numNodos(a), numNodos(b))) .
+
+*** ----------------------------------------------------------------------------
+*** EJERCICIO 141.maude — Equality, BST Ordering (esOrdenado), Leaves & Mirror
+*** ----------------------------------------------------------------------------
+***************** SINTAXIS *****************
+op esIgual : AB AB -> Bool .
+op esOrdenado : AB -> Bool .
+op cuentaVocal : V AB -> N .
+op cuentaHojas : AB -> N .
+op espejo : AB -> AB .
+***************** SEMANTICA ****************
+var a b c d : AB .
+var v w x : V .
+eq esIgual(arbolVacio, arbolVacio) = true .
+eq esIgual(arbolVacio, construir(v, a, b)) = false .
+eq esIgual(construir(v, a, b), arbolVacio) = false .
+eq esIgual(construir(v, a, b), construir(w, c, d)) =
+    esIgual(v, w) and
+    esIgual(a, c) and
+    esIgual(b, d) .
+eq esOrdenado(arbolVacio) = true .
+eq esOrdenado(construir(v, arbolVacio, arbolVacio)) = true .
+eq esOrdenado(construir(v, construir(w, a, b), arbolVacio)) =
+    esMenorIgual(w, v) and
+    esOrdenado(construir(v, a, arbolVacio)) and
+    esOrdenado(construir(v, b, arbolVacio)) and
+    esOrdenado(construir(w, a, b)) .
+eq esOrdenado(construir(v, arbolVacio, construir(w, a, b))) =
+    esMenorIgual(v, w) and
+    esOrdenado(construir(v, arbolVacio, a)) and
+    esOrdenado(construir(v, arbolVacio, b)) and
+    esOrdenado(construir(w, a, b)) .
+eq esOrdenado(construir(v, a, b)) =
+    esOrdenado(construir(v, a, arbolVacio)) and
+    esOrdenado(construir(v, arbolVacio, b)) .
+eq cuentaVocal(v, arbolVacio) = cero .
+eq cuentaVocal(v, construir(w, a, b)) =
+    if esIgual(v, w)
+        then sucesor(suma(cuentaVocal(v, a), cuentaVocal(v, b)))
+        else suma(cuentaVocal(v, a), cuentaVocal(v, b))
+    fi .
+eq cuentaHojas(arbolVacio) = cero .
+eq cuentaHojas(construir(v, a, b)) =
+    if esIgual(sucesor(cero), altura(construir(v, a, b)))
+        then sucesor(suma(cuentaHojas(a), cuentaHojas(b)))
+        else suma(cuentaHojas(a), cuentaHojas(b))
+    fi .
+eq espejo(arbolVacio) = arbolVacio .
+eq espejo(construir(v, a, b)) = construir(v, espejo(b), espejo(a)) .
+
+*** ----------------------------------------------------------------------------
+*** EJERCICIO 142.maude — Tree Traversals (preOrden, inOrden, postOrden)
+*** ----------------------------------------------------------------------------
+***************** SINTAXIS *****************
+op preOrden : AB -> L .
+op inOrden : AB -> L .
+op postOrden : AB -> L .
+***************** SEMANTICA ****************
+var a b c d : AB .
+var v w x : V .
+var l : L .
+eq preOrden(arbolVacio) = listaVacia .
+eq preOrden(construir(v, a, b)) = insertar(v, concatenar(preOrden(a), preOrden(b))) .
+eq inOrden(arbolVacio) = listaVacia .
+eq inOrden(construir(v, a, b)) = concatenar(inOrden(a), insertar(v, inOrden(b))) .
+eq postOrden(arbolVacio) = listaVacia .
+eq postOrden(construir(v, a, b)) = insertarFinal(v, concatenar(postOrden(a), postOrden(b))) .
+
+*** ----------------------------------------------------------------------------
+*** EJERCICIO 143.maude — Multiset Node, Leaf & Level Extraction
+*** ----------------------------------------------------------------------------
+***************** SINTAXIS *****************
+op sacaTodos : AB -> B .
+op sacaHojas : AB -> B .
+op sacaNivel : N AB -> B .
+***************** SEMANTICA ****************
+var a b c d : AB .
+var v w x : V .
+var l : L .
+var g : B .
+var n : N .
+eq sacaTodos(arbolVacio) = bolsaVacia .
+eq sacaTodos(construir(v, a, b)) = insertar(v, union(sacaTodos(a), sacaTodos(b))) .
+eq sacaHojas(arbolVacio) = bolsaVacia .
+eq sacaHojas(construir(v, a, b)) =
+    if esCero(suma(altura(a), altura(b)))
+        then insertar(v, bolsaVacia)
+        else union(sacaHojas(a), sacaHojas(b))
+    fi .
+eq sacaNivel(n, arbolVacio) = bolsaVacia .
+eq sacaNivel(cero, construir(v, a, b)) = insertar(v, bolsaVacia) .
+eq sacaNivel(sucesor(n), construir(v, a, b)) = union(sacaNivel(n, a), sacaNivel(n, b)) .
+
+*** ----------------------------------------------------------------------------
+*** EJERCICIO 144.maude — AVL Balance (esAVL), Perfect Balance & Rotations
+*** ----------------------------------------------------------------------------
+***************** SINTAXIS *****************
+op esAVL : AB -> Bool .
+op esPerfBal : AB -> Bool .
+op rsd : AB -> AB .
+op rsi : AB -> AB .
+op rdd : AB -> AB .
+op rdi : AB -> AB .
+op ROTACIONNOVALIDA : -> MensajeArboles .
+***************** SEMANTICA ****************
+var a b c d : AB .
+var v w x : V .
+var l : L .
+var g : B .
+var n : N .
+eq esIgual(ROTACIONNOVALIDA, ROTACIONNOVALIDA) = true .
+eq esIgual(a, ROTACIONNOVALIDA) = false .
+eq esAVL(arbolVacio) = true .
+eq esAVL(construir(v, a, b)) =
+    esMenorIgual(resta(maximo(altura(a), altura(b)), minimo(altura(a), altura(b))), sucesor(cero)) and esAVL(a) and esAVL(b) .
+eq esPerfBal(arbolVacio) = true .
+eq esPerfBal(construir(v, a, b)) =
+    esMenorIgual(resta(maximo(numNodos(a), numNodos(b)), minimo(numNodos(a), numNodos(b))), sucesor(cero)) and esPerfBal(a) and esPerfBal(b) .
+eq rsd(arbolVacio) = ROTACIONNOVALIDA .
+eq rsd(construir(v, a, arbolVacio)) = ROTACIONNOVALIDA .
+eq rsd(construir(v, a, construir(w, c, d))) = construir(w, construir(v, a, c), d) .
+eq rsi(arbolVacio) = ROTACIONNOVALIDA .
+eq rsi(construir(v, construir(w, a, b), c)) = construir(w, a, construir(v, b, c)) .
+eq rsi(construir(v, arbolVacio, a)) = ROTACIONNOVALIDA .
+eq rdd(arbolVacio) = ROTACIONNOVALIDA .
+eq rdd(construir(v, a, construir(w, arbolVacio, b))) = ROTACIONNOVALIDA .
+eq rdd(construir(v, a, b)) = if esIgual(rsi(b), ROTACIONNOVALIDA) then ROTACIONNOVALIDA else rsd(construir(v, a, rsi(b))) fi .
+eq rdi(arbolVacio) = ROTACIONNOVALIDA .
+eq rdi(construir(v, construir(w, a, arbolVacio), b)) = ROTACIONNOVALIDA .
+eq rdi(construir(v, a, b)) = if esIgual(rsd(a), ROTACIONNOVALIDA) then ROTACIONNOVALIDA else rsi(construir(v, rsd(a), b)) fi .

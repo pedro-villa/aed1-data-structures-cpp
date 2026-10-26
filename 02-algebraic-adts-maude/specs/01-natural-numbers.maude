@@ -1,0 +1,198 @@
+*** ============================================================================
+*** Module 01: Peano Natural Numbers & Number Theory (Exercises 101 - 107)
+*** ============================================================================
+
+*** ----------------------------------------------------------------------------
+*** EJERCICIO 101.maude — Peano Constructors, Addition & Equality
+*** ----------------------------------------------------------------------------
+***************** SINTAXIS *****************
+op cero : -> N .
+op sucesor : N -> N .
+op suma : N N -> N .
+op esCero : N -> Bool .
+op esIgual : N N -> Bool .
+op esDistinto : N N -> Bool .
+op NODEFINIDO : -> NoN .
+op INFINITO : -> NoN .
+op NEGATIVO : -> NoN .
+***************** SEMANTICA ****************
+var n m : N .
+eq suma(cero, n) = n .
+eq suma(sucesor(m), n) = sucesor(suma(m, n)) .
+eq esCero(cero) = true .
+eq esCero(sucesor(n)) = false .
+eq esIgual(cero, n) = esCero(n) .
+eq esIgual(sucesor(n), cero) = false .
+eq esIgual(sucesor(n), sucesor(m)) = esIgual(n, m) .
+eq esDistinto(n, m) = not esIgual(n, m) .
+
+*** ----------------------------------------------------------------------------
+*** EJERCICIO 102.maude — Multiplication, Exponentiation, Square & Factorial
+*** ----------------------------------------------------------------------------
+************** SINTAXIS **************
+op producto : N N -> N .
+op potencia : N N -> N .
+op cuadrado : N -> N .
+op factorial : N -> N .
+op NODEFINIDO : -> NoN .
+op INFINITO : -> NoN .
+op NEGATIVO : -> NoN .
+************** SEMANTICA **************
+var n m o : N .
+eq producto(cero, n) = cero .
+eq producto(sucesor(n), m) = suma(producto(n, m), m) .
+eq producto(o, suma(n, m)) = suma(producto(o, n), producto(o, m)) .
+eq potencia(cero, cero) = NODEFINIDO .
+eq potencia(cero, sucesor(n)) = cero .
+eq potencia(n, cero) = sucesor(cero) .
+eq potencia(n, sucesor(m)) = producto(potencia(n, m), n) .
+eq cuadrado(n) = producto(n, n) .
+eq factorial(cero) = sucesor(cero) .
+eq factorial(sucesor(n)) = producto(factorial(n), sucesor(n)) .
+
+*** ----------------------------------------------------------------------------
+*** EJERCICIO 103.maude — Predecessor, Subtraction & Absolute Difference
+*** ----------------------------------------------------------------------------
+************** SINTAXIS **************
+op predecesor : N -> N .
+op resta : N N -> N .
+op diferencia : N N -> N .
+op difUno : N N -> Bool .
+op NODEFINIDO : -> NoN .
+op INFINITO : -> NoN .
+op NEGATIVO : -> NoN .
+************** SEMANTICA **************
+var n m o : N .
+eq predecesor(cero) = NEGATIVO .
+eq predecesor(sucesor(n)) = n .
+eq resta(n, cero) = n .
+eq resta(cero, sucesor(n)) = NEGATIVO .
+eq resta(sucesor(n), sucesor(m)) = resta(n, m) .
+eq diferencia(n, cero) = resta(n, cero) .
+eq diferencia(cero, n) = resta(n, cero) .
+eq diferencia(sucesor(n), sucesor(m)) = diferencia(m, n) .
+eq difUno(cero, cero) = true .
+eq difUno(cero, sucesor(n)) = esIgual(cero, n) .
+eq difUno(sucesor(n), cero) = esIgual(cero, n) .
+eq difUno(sucesor(n), sucesor(m)) = difUno(m, n) .
+
+*** ----------------------------------------------------------------------------
+*** EJERCICIO 104.maude — Relational Operators, Maximum & Minimum
+*** ----------------------------------------------------------------------------
+************** SINTAXIS **************
+op esMenor : N N -> Bool .
+op esMenorIgual : N N -> Bool .
+op esMayor : N N -> Bool .
+op esMayorIgual : N N -> Bool .
+op maximo : N N -> N .
+op minimo : N N -> N .
+op NODEFINIDO : -> NoN .
+op INFINITO : -> NoN .
+op NEGATIVO : -> NoN .
+************** SEMANTICA **************
+var n m o : N .
+eq esMenor(cero, sucesor(n)) = true .
+eq esMenor(n, cero) = false .
+eq esMenor(sucesor(n), sucesor(m)) = esMenor(n, m) .
+eq esMenorIgual(n, n) = true .
+eq esMenorIgual(sucesor(n), cero) = false .
+eq esMenorIgual(n, sucesor(m)) = esMenor(if esIgual(n, sucesor(m)) then cero else n fi, sucesor(m)) .
+eq esMayor(n, m) = esMenor(m, n) .
+eq esMayorIgual(n, m) = esMenorIgual(m, n) .
+eq maximo(cero, n) = n .
+eq maximo(n, cero) = n .
+eq maximo(sucesor(n), sucesor(m)) = sucesor(maximo(n, m)) .
+eq minimo(cero, n) = cero .
+eq minimo(n, cero) = cero .
+eq minimo(sucesor(n), sucesor(m)) = sucesor(minimo(n, m)) .
+
+*** ----------------------------------------------------------------------------
+*** EJERCICIO 105.maude — Integer Division, Modulo, Halving & Parity
+*** ----------------------------------------------------------------------------
+************** SINTAXIS **************
+op division : N N -> N .
+op modulo : N N -> N .
+op mitad : N -> N .
+op esPar : N -> Bool .
+op NODEFINIDO : -> NoN .
+op INFINITO : -> NoN .
+op NEGATIVO : -> NoN .
+************** SEMANTICA **************
+var n m o : N .
+eq division(cero, cero) = NODEFINIDO .
+eq division(sucesor(n), cero) = INFINITO .
+eq division(cero, sucesor(n)) = cero .
+eq division(sucesor(n), sucesor(n)) = sucesor(cero) .
+eq division(n, sucesor(m)) = if esMenor(n, sucesor(m)) then cero else sucesor(division(resta(n, sucesor(m)), sucesor(m))) fi .
+eq modulo(n, cero) = NODEFINIDO .
+eq modulo(n, n) = cero .
+eq modulo(n, m) = if esMenor(n, m) then n else modulo(resta(n, m), m) fi .
+eq mitad(n) = division(n, sucesor(sucesor(cero))) .
+eq esPar(cero) = true .
+eq esPar(sucesor(cero)) = false .
+eq esPar(sucesor(sucesor(n))) = esPar(n) .
+
+*** ----------------------------------------------------------------------------
+*** EJERCICIO 106.maude — Binary Logarithm & Integer N-th Root Approximation
+*** ----------------------------------------------------------------------------
+************** SINTAXIS **************
+op NODEFINIDO : -> NoN .
+op INFINITO : -> NoN .
+op NEGATIVO : -> NoN .
+op logaritmo : N -> N .
+op raiz : N -> N .
+op raiz : N N -> N .
+op sucRaiz : N N N -> N .
+************** SEMANTICA **************
+var n m o : N .
+eq logaritmo(sucesor(cero)) = cero .
+eq logaritmo(cero) = INFINITO .
+eq logaritmo(n) = sucesor(logaritmo(mitad(n))) .
+eq raiz(cero, n) = NODEFINIDO .
+eq raiz(sucesor(n), cero) = cero .
+eq raiz(sucesor(n), sucesor(cero)) = sucesor(cero) .
+*** Aproximacion de raices basada en la iteracion de un candidato
+eq sucRaiz(sucesor(n), m, o) =
+    if esMenorIgual(potencia(o, sucesor(n)), m)
+        then sucesor(sucRaiz(sucesor(n), m, sucesor(o)))
+        else cero
+    fi .
+eq raiz(n, m) = sucRaiz(n, m, sucesor(cero)) .
+eq raiz(n) = raiz(sucesor(sucesor(cero)), n) .
+
+*** ----------------------------------------------------------------------------
+*** EJERCICIO 107.maude — GCD (mcd), LCM (mcm) & Coprimality
+*** ----------------------------------------------------------------------------
+************** SINTAXIS **************
+op NODEFINIDO : -> NoN .
+op INFINITO : -> NoN .
+op NEGATIVO : -> NoN .
+op mcd : N N -> N .
+op mcm : N N -> N .
+op coprimos : N N -> Bool .
+op divisorComun : N N N -> N .
+************** SEMANTICA **************
+var n m o : N .
+eq mcd(n, cero) = n .
+eq mcd(cero, n) = n .
+eq mcd(n, n) = n .
+eq divisorComun(n, m, o) =
+    if esMenorIgual(o, division(maximo(n, m), sucesor(sucesor(cero))))
+        then
+            if esIgual(producto(division(n, o), o), n) and esIgual(producto(division(m, o), o), m)
+                then maximo(o, divisorComun(n, m, sucesor(o)))
+                else divisorComun(n, m, sucesor(o))
+            fi
+        else sucesor(cero)
+    fi .
+eq mcd(n, m) = divisorComun(n, m, sucesor(cero)) .
+eq mcm(cero, n) = cero .
+eq mcm(n, cero) = cero .
+eq mcm(n, m) =
+    if esIgual(sucesor(cero), mcd(n, m))
+        then producto(n, m)
+        else producto(mcd(n, m), mcm(division(n, mcd(n, m)), division(m, mcd(n, m))))
+    fi .
+eq coprimos(cero, n) = false .
+eq coprimos(n, cero) = false .
+eq coprimos(n, m) = esIgual(sucesor(cero), mcd(n, m)) .

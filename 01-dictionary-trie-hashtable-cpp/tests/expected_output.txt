@@ -1,0 +1,15 @@
+Insertando: 10 palabras
+Total diccionario: 9 palabras
+Buscando: CAMION -> Encontrada
+Buscando: PINGUINO -> No encontrada
+Buscando: PINGÜINO -> Encontrada
+Buscando: NIÑO -> Encontrada
+Buscando: NINO -> No encontrada
+Alarga: CAS -> CASAMIENTO
+Alarga: CAM -> CAMIONETAS
+Alarga: Ñ -> ÑANDU
+Saco: AGUILA CASERO -> CAMION CAMIONETAS CASA CASAMIENTO 
+Vaciando
+Total diccionario: 0 palabras
+Buscando: CASA -> No encontrada
+Saliendo...

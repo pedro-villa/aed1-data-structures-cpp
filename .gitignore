@@ -1,0 +1,25 @@
+# Compiled binaries and object files
+bin/
+build/
+cmake-build-*/
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+Makefile.cmake
+*.o
+*.obj
+*.exe
+*.out
+*.app
+
+# Temporary test outputs
+actual_output.txt
+temp*.txt
+
+# IDE & OS metadata
+.vscode/
+.idea/
+*.swp
+*~
+.DS_Store
+Thumbs.db

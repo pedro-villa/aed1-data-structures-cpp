@@ -1,0 +1,15 @@
+<insertar>
+casa casamiento casero camionetas camión pingüino niño ñandú águila casa
+</insertar>
+<buscar> camion
+<buscar> pinguino
+<buscar> pingüino
+<buscar> niño
+<buscar> nino
+<alarga> cas
+<alarga> cam
+<alarga> ñ
+<saco> aguila casero
+<vaciar>
+<buscar> casa
+<exit>

@@ -1,0 +1,112 @@
+*** ============================================================================
+*** Module 03: Set & Multiset (Bag) ADTs (Exercises 120 - 126)
+*** ============================================================================
+
+*** ----------------------------------------------------------------------------
+*** EJERCICIO 120.maude — Set ADT Core Operations (C)
+*** ----------------------------------------------------------------------------
+***************** SINTAXIS *****************
+op cjtoVacio : -> C .
+op esVacio : C -> Bool .
+op insertar : V C -> C .
+op esMiembro : V C -> Bool .
+op tamano : C -> N .
+***************** SEMANTICA ****************
+var v w : V .
+var c : C .
+eq esVacio(cjtoVacio) = true .
+eq esVacio(insertar(v, c)) = false .
+eq esMiembro(v, cjtoVacio) = false .
+eq esMiembro(v, insertar(w, c)) = esIgual(v, w) or esMiembro(v, c) .
+eq tamano(cjtoVacio) = cero .
+eq tamano(insertar(v, c)) = suma(tamano(c), if esMiembro(v, c) then cero else sucesor(cero) fi) .
+
+*** ----------------------------------------------------------------------------
+*** EJERCICIO 121.maude — Set Union, Intersection, Difference & Removal
+*** ----------------------------------------------------------------------------
+***************** SINTAXIS *****************
+op union : C C -> C .
+op interseccion : C C -> C .
+op diferencia : C C -> C .
+op eliminar : V C -> C .
+***************** SEMANTICA ****************
+var v w : V .
+var c d : C .
+eq union(cjtoVacio, c) = c .
+eq union(c, insertar(v, d)) = insertar(v, union(c, d)) .
+eq union(c, d) = union(d, c) .
+eq interseccion(c, cjtoVacio) = cjtoVacio .
+eq interseccion(c, insertar(v, d)) =
+    if esMiembro(v, c) then insertar(v, interseccion(c, d))
+    else interseccion(c, d) fi .
+eq interseccion(c, d) = interseccion(d, c) .
+eq diferencia(c, cjtoVacio) = c .
+eq diferencia(cjtoVacio, c) = cjtoVacio .
+eq diferencia(insertar(v, c), d) =
+    if esMiembro(v, d) then diferencia(c, d) else insertar(v, diferencia(c, d)) fi .
+eq eliminar(v, c) = diferencia(c, insertar(v, cjtoVacio)) .
+
+*** ----------------------------------------------------------------------------
+*** EJERCICIO 122.maude — Set Equality, Subset Inclusion & Disjointness
+*** ----------------------------------------------------------------------------
+***************** SINTAXIS *****************
+op esIgual : C C -> Bool .
+op esMenor : C C -> Bool .
+op esMenorIgual : C C -> Bool .
+op disjuntos : C C -> Bool .
+***************** SEMANTICA ****************
+var v w : V .
+var c d : C .
+eq esIgual(c, d) = esVacio(diferencia(union(c, d), interseccion(c, d))) .
+eq esMenor(cjtoVacio, insertar(v, c)) = true .
+eq esMenor(c, d) = esIgual(c, interseccion(c, d)) and not esIgual(c, d) .
+eq esMenorIgual(c, d) = esVacio(diferencia(c, d)) .
+eq disjuntos(c, d) = esIgual(interseccion(c, d), cjtoVacio) .
+
+*** ----------------------------------------------------------------------------
+*** EJERCICIO 125.maude — Multiset / Bag Core Operations (B)
+*** ----------------------------------------------------------------------------
+***************** SINTAXIS *****************
+op bolsaVacia : -> B .
+op esVacia : B -> Bool .
+op insertar : V B -> B .
+op contar : V B -> N .
+op eliminar : V B -> B .
+***************** SEMANTICA ****************
+var b d : B .
+var v w : V .
+eq esVacia(bolsaVacia) = true .
+eq esVacia(insertar(v, b)) = false .
+eq contar(v, bolsaVacia) = cero .
+eq contar(v, insertar(w, b)) =
+    if esIgual(v, w) then sucesor(contar(v, b)) else contar(v, b) fi .
+eq eliminar(v, bolsaVacia) = bolsaVacia .
+eq eliminar(v, insertar(w, b)) =
+    if esIgual(v, w) then b else insertar(w, eliminar(v, b)) fi .
+
+*** ----------------------------------------------------------------------------
+*** EJERCICIO 126.maude — Multiset Union, Intersection, Difference & Equality
+*** ----------------------------------------------------------------------------
+***************** SINTAXIS *****************
+op union : B B -> B .
+op interseccion : B B -> B .
+op diferencia : B B -> B .
+op esIgual : B B -> Bool .
+***************** SEMANTICA ****************
+var b d : B .
+var v w : V .
+eq union(b, bolsaVacia) = b .
+eq union(bolsaVacia, b) = b .
+eq union(insertar(v, b), insertar(w, d)) = insertar(v, insertar(w, union(b, d))) .
+eq interseccion(b, bolsaVacia) = bolsaVacia .
+eq interseccion(bolsaVacia, b) = bolsaVacia .
+eq interseccion(insertar(v, b), d) =
+    if esMenor(cero, contar(v, d)) then insertar(v, interseccion(b, eliminar(v, d))) else interseccion(b, d) fi .
+eq diferencia(b, bolsaVacia) = b .
+eq diferencia(bolsaVacia, b) = bolsaVacia .
+eq diferencia(b, insertar(v, d)) = diferencia(eliminar(v, b), d) .
+eq esIgual(b, b) = true .
+eq esIgual(b, insertar(v, b)) = false .
+eq esIgual(insertar(v, b), d) =
+    if esMenor(cero, contar(v, d)) then esIgual(b, eliminar(v, d)) else false fi .
+eq esIgual(b, d) = esIgual(d, b) .
