@@ -51,3 +51,8 @@ The engine resolves this in two stages:
 - **Duplicate-Free Insertion (`insertar`)**: Scans the bucket until `*EA >= palabra` and inserts only if `*EA != palabra`.
 - **Early-Exit Lookup (`consultar`)**: Stops scanning a bucket as soon as `*EA >= palabra`.
 - **Lexicographical Range Query (`sacoPalabras` / `<saco> w1 w2`)**: Exploits the order-preserving first-byte bucket index to iterate only across buckets `hashmio(w1) .. hashmio(w2)` and emit all words $w$ satisfying $w_1 < w < w_2$.
+
+## Collaborators
+
+- **Marta Tomás** ([@MartaTR13](https://github.com/MartaTR13))
+- **Pedro Villa** ([@pedro-villa](https://github.com/pedro-villa))

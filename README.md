@@ -92,3 +92,8 @@ cmake -B build -DCMAKE_BUILD_TYPE=Release
 cmake --build build
 ./build/diccionario_aed1 < 01-dictionary-trie-hashtable-cpp/tests/sample_input.txt
 ```
+
+## Collaborators
+
+- **Marta Tomás** ([@MartaTR13](https://github.com/MartaTR13))
+- **Pedro Villa** ([@pedro-villa](https://github.com/pedro-villa))

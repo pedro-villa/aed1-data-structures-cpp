@@ -32,3 +32,8 @@ Defines binary trees constructed via `arbolVacio : -> AB` and `construir : V AB 
   - **Single & Double AVL Rotations**:
     - `rsd` (Right-subtree single rotation / left rotation) & `rsi` (Left-subtree single rotation / right rotation).
     - `rdd` (Right-Left double rotation composed as `rsd(construir(v, a, rsi(b)))`) & `rdi` (Left-Right double rotation composed as `rsi(construir(v, rsd(a), b))`), with invalid rotation guard propagation (`ROTACIONNOVALIDA`).
+
+## Collaborators
+
+- **Marta Tomás** ([@MartaTR13](https://github.com/MartaTR13))
+- **Pedro Villa** ([@pedro-villa](https://github.com/pedro-villa))
