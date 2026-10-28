@@ -35,4 +35,5 @@ Defines binary trees constructed via `arbolVacio : -> AB` and `construir : V AB 
 
 ## Collaborators
 
-Acknowledgment to Marta Tomás ([@MartaTR13](https://github.com/MartaTR13)) and Pedro Villa ([@pedro-villa](https://github.com/pedro-villa)) as collaborators.
+- **Marta Tomás** ([@MartaTR13](https://github.com/MartaTR13))
+- **Pedro Villa** ([@pedro-villa](https://github.com/pedro-villa))
